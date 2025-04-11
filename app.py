@@ -1,31 +1,41 @@
 import streamlit as st
 import pandas as pd
 from openai import OpenAI
-from dotenv import load_dotenv
-import os
-import re
-import time
 import json
-from datetime import datetime, timedelta
-import plotly.express as px
+import time
+from datetime import timedelta
+import os
+from dotenv import load_dotenv
+import re
 from fuzzywuzzy import fuzz
 import numpy as np
+import plotly.express as px
 
-# Load environment variables
-load_dotenv()
+# Initialize OpenAI client with API key from Streamlit secrets
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-# Set OpenAI API key
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Load configuration
+def load_config():
+    try:
+        with open('config.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {
+            'translation_model': 'gpt-3.5-turbo',
+            'classification_model': 'gpt-3.5-turbo',
+            'unspsc_model': 'gpt-3.5-turbo',
+            'confidence_threshold': 85,
+            'unspsc_confidence_threshold': 85
+        }
 
-# Initialize session state for configurations
+# Save configuration
+def save_config(config):
+    with open('config.json', 'w') as f:
+        json.dump(config, f)
+
+# Initialize session state for configuration
 if 'config' not in st.session_state:
-    st.session_state.config = {
-        'translation_model': 'gpt-3.5-turbo',
-        'classification_model': 'gpt-3.5-turbo',
-        'unspsc_model': 'gpt-3.5-turbo',
-        'confidence_threshold': 85,
-        'unspsc_confidence_threshold': 85
-    }
+    st.session_state.config = load_config()
 
 # Hlaða inn UNSPSC CSV skránni
 @st.cache_data
@@ -44,20 +54,6 @@ def load_unspsc_data():
         return None
     except Exception as e:
         st.error(f"Villa við að hlaða UNSPSC skrá: {str(e)}")
-        return None
-
-def save_config(config):
-    """Saves current configuration to a file"""
-    with open('config.json', 'w') as f:
-        json.dump(config, f)
-
-def load_config():
-    """Loads configuration from file"""
-    try:
-        with open('config.json', 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        st.warning("No saved configuration found. Using default settings.")
         return None
 
 def translate_text(text, model="gpt-3.5-turbo"):
