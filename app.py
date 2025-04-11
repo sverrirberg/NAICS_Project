@@ -75,7 +75,10 @@ def translate_text(text, model="gpt-3.5-turbo"):
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system", "content": "You are a professional translator from Icelandic to English. Translate the following text accurately while maintaining its meaning and context."},
+                {"role": "system", "content": """You are a professional translator. 
+                Your task is to translate the given text to English while maintaining its meaning and context.
+                You can translate from any language to English.
+                Provide only the translation, without any additional text or explanations."""},
                 {"role": "user", "content": text}
             ],
             temperature=0.3
@@ -294,9 +297,28 @@ def find_best_unspsc_match(description, unspsc_df):
 def is_english(text):
     """Checks if text is already in English"""
     try:
-        # Simple check for common Icelandic characters
-        icelandic_chars = ['á', 'é', 'í', 'ó', 'ú', 'ý', 'þ', 'æ', 'ö', 'ð']
-        return not any(char in text.lower() for char in icelandic_chars)
+        # Check for common non-English characters from various languages
+        non_english_chars = {
+            'Icelandic': ['á', 'é', 'í', 'ó', 'ú', 'ý', 'þ', 'æ', 'ö', 'ð'],
+            'Danish': ['æ', 'ø', 'å', 'é', 'ü', 'ä', 'ö'],
+            'German': ['ä', 'ö', 'ü', 'ß'],
+            'Italian': ['à', 'è', 'é', 'ì', 'ò', 'ù'],
+            'French': ['à', 'â', 'ç', 'é', 'è', 'ê', 'ë', 'î', 'ï', 'ô', 'û', 'ù', 'ü', 'ÿ'],
+            'Spanish': ['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü'],
+            'Swedish': ['å', 'ä', 'ö'],
+            'Norwegian': ['æ', 'ø', 'å'],
+            'Finnish': ['ä', 'ö', 'å'],
+            'Portuguese': ['á', 'à', 'â', 'ã', 'é', 'ê', 'í', 'ó', 'ô', 'õ', 'ú', 'ü', 'ç'],
+            'Polish': ['ą', 'ć', 'ę', 'ł', 'ń', 'ó', 'ś', 'ź', 'ż'],
+            'Russian': ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я']
+        }
+        
+        # Check if text contains any non-English characters
+        for language, chars in non_english_chars.items():
+            if any(char in text.lower() for char in chars):
+                return False
+                
+        return True
     except:
         return False
 
