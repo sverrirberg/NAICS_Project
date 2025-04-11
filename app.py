@@ -72,17 +72,30 @@ def load_unspsc_data():
 def translate_text(text, model="gpt-3.5-turbo"):
     """Translates text to English using OpenAI API"""
     try:
+        # First check if the text is already in English
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": """You are a language detector. 
+                Your task is to determine if the given text is in English.
+                Respond with only 'True' if the text is in English, or 'False' if it's in any other language."""},
+                {"role": "user", "content": text}
+            ],
+            temperature=0.1
+        )
+        
+        is_english = response.choices[0].message.content.strip().lower() == 'true'
+        
+        if is_english:
+            return text
+            
+        # If not English, translate it
         response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": """You are a professional translator. 
-                Your task is to:
-                1. Detect the language of the given text
-                2. If the text is not in English, translate it to English
-                3. If the text is already in English, return it as is
-                
-                Provide only the translation, without any additional text or explanations.
-                Maintain the original meaning and context."""},
+                Your task is to translate the given text to English while maintaining its meaning and context.
+                Provide only the translation, without any additional text or explanations."""},
                 {"role": "user", "content": text}
             ],
             temperature=0.3
