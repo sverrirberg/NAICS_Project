@@ -368,7 +368,8 @@ def main():
     st.set_page_config(
         page_title="NAICS & UNSPSC Class Engine",
         page_icon="static/images/Logo_Greind_Mynd.png",
-        layout="wide"
+        layout="wide",
+        initial_sidebar_state="expanded"
     )
     
     # Configuration sidebar
