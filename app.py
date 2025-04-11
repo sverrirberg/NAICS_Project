@@ -76,9 +76,13 @@ def translate_text(text, model="gpt-3.5-turbo"):
             model=model,
             messages=[
                 {"role": "system", "content": """You are a professional translator. 
-                Your task is to translate the given text to English while maintaining its meaning and context.
-                You can translate from any language to English.
-                Provide only the translation, without any additional text or explanations."""},
+                Your task is to:
+                1. Detect the language of the given text
+                2. If the text is not in English, translate it to English
+                3. If the text is already in English, return it as is
+                
+                Provide only the translation, without any additional text or explanations.
+                Maintain the original meaning and context."""},
                 {"role": "user", "content": text}
             ],
             temperature=0.3
@@ -446,23 +450,17 @@ def main():
                     progress = (i + 1) / (total_rows * 3)  # First third for translation
                     stopwatch.text(f"Time elapsed: {format_time(time.time() - start_time)}")
                     
-                    # Check if procurement description is already in English
-                    if is_english(str(row['procurement_description'])):
-                        df.at[i, 'procurement_description_en'] = str(row['procurement_description'])
-                    else:
-                        df.at[i, 'procurement_description_en'] = translate_text(
-                            str(row['procurement_description']),
-                            model=st.session_state.config['translation_model']
-                        )
+                    # Translate procurement description
+                    df.at[i, 'procurement_description_en'] = translate_text(
+                        str(row['procurement_description']),
+                        model=st.session_state.config['translation_model']
+                    )
                     
-                    # Check if account description is already in English
-                    if is_english(str(row['account'])):
-                        df.at[i, 'account_en'] = str(row['account'])
-                    else:
-                        df.at[i, 'account_en'] = translate_text(
-                            str(row['account']),
-                            model=st.session_state.config['translation_model']
-                        )
+                    # Translate account description
+                    df.at[i, 'account_en'] = translate_text(
+                        str(row['account']),
+                        model=st.session_state.config['translation_model']
+                    )
                     
                     progress_bar.progress(progress)
                 
