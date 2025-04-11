@@ -367,7 +367,7 @@ def plot_confidence_distribution(df, column):
 def main():
     st.set_page_config(
         page_title="NAICS & UNSPSC Class Engine",
-        page_icon="📊",
+        page_icon="static/images/Logo_Greind_Mynd.png",
         layout="wide"
     )
     
