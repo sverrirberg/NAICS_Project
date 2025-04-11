@@ -365,7 +365,18 @@ def plot_confidence_distribution(df, column):
     return fig
 
 def main():
-    st.title("NAICS and UNSPSC Classification System")
+    st.set_page_config(
+        page_title="NAICS & UNSPSC Class Engine",
+        page_icon="📊",
+        layout="wide"
+    )
+    
+    # Add logo and title
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        st.image("static/images/Logo_Greind_Horizontal.png", width=200)
+    with col2:
+        st.title("NAICS & UNSPSC Class Engine")
     
     # Configuration sidebar
     with st.sidebar:
