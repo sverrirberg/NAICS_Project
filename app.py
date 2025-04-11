@@ -427,7 +427,7 @@ def main():
             st.success("Configuration saved successfully")
     
     # File upload section
-    st.header("File Upload")
+    st.title("NAICS & UNSPSC Class Engine")
     st.markdown("""
     **CSV File Requirements:**
     - The CSV file must contain exactly two columns:
