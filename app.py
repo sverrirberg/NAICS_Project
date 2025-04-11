@@ -318,6 +318,18 @@ def is_english(text):
             if any(char in text.lower() for char in chars):
                 return False
                 
+        # If no non-English characters found, check if text contains any English words
+        # This is a simple check - if the text contains common English words or patterns
+        common_english_words = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'any', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'man', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too', 'use']
+        
+        # Convert text to lowercase and split into words
+        words = text.lower().split()
+        
+        # If any common English words are found, consider it English
+        if any(word in common_english_words for word in words):
+            return True
+            
+        # If no English words found and no non-English characters, assume it's English
         return True
     except:
         return False
