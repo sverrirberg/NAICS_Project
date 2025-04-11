@@ -372,7 +372,7 @@ def main():
     )
     
     # Add logo and title
-    st.image("static/images/Logo_Greind_Horizontal.png", width=300, use_column_width=True)
+    st.image("static/images/Logo_Greind_Horizontal.png", width=200, use_container_width=True)
     st.title("NAICS & UNSPSC Class Engine")
     
     # Configuration sidebar
