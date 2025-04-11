@@ -426,7 +426,17 @@ def main():
             save_config(st.session_state.config)
             st.success("Configuration saved successfully")
     
-    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+    # File upload section
+    st.header("File Upload")
+    st.markdown("""
+    **CSV File Requirements:**
+    - The CSV file must contain exactly two columns:
+      - `description`: Contains the procurement descriptions
+      - `account`: Contains the account information
+    - The file should be in UTF-8 encoding
+    - The first row should contain the column headers
+    """)
+    uploaded_file = st.file_uploader("Choose a CSV file", type=['csv'])
     
     if uploaded_file is not None:
         try:
