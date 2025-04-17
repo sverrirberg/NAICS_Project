@@ -21,9 +21,9 @@ def load_config():
             config = json.load(f)
             # Ensure all required keys are present
             default_config = {
-                'translation_model': 'gpt-3.5-turbo',
-                'classification_model': 'gpt-3.5-turbo',
-                'unspsc_model': 'gpt-3.5-turbo',
+                'translation_model': 'gpt-4o',
+                'classification_model': 'gpt-4o',
+                'unspsc_model': 'gpt-4o',
                 'confidence_threshold': 85,
                 'unspsc_confidence_threshold': 85
             }
@@ -34,9 +34,9 @@ def load_config():
             return config
     except FileNotFoundError:
         return {
-            'translation_model': 'gpt-3.5-turbo',
-            'classification_model': 'gpt-3.5-turbo',
-            'unspsc_model': 'gpt-3.5-turbo',
+            'translation_model': 'gpt-4o',
+            'classification_model': 'gpt-4o',
+            'unspsc_model': 'gpt-4o',
             'confidence_threshold': 85,
             'unspsc_confidence_threshold': 85
         }
@@ -112,7 +112,7 @@ def validate_naics_code(code):
     # NAICS codes are 2-6 digits
     return bool(re.match(r'^\d{2,6}$', str(code)))
 
-def get_naics_code(text, model="gpt-3.5-turbo"):
+def get_naics_code(text, model="gpt-4o"):
     """Gets NAICS code for description with improved accuracy"""
     try:
         if not isinstance(text, str) or not text.strip():
@@ -168,7 +168,7 @@ def get_naics_code(text, model="gpt-3.5-turbo"):
         st.error(f"NAICS classification error: {str(e)}")
         return None, None, 0
 
-def get_unspsc_code(procurement_desc, naics_desc, model="gpt-3.5-turbo"):
+def get_unspsc_code(procurement_desc, naics_desc, model="gpt-4o"):
     """Gets UNSPSC code based on procurement description and NAICS description"""
     try:
         if not isinstance(procurement_desc, str) or not procurement_desc.strip():
@@ -237,7 +237,7 @@ def get_unspsc_code(procurement_desc, naics_desc, model="gpt-3.5-turbo"):
         st.error(f"UNSPSC classification error: {str(e)}")
         return None, None, 0
 
-def get_unspsc_description(text, model="gpt-3.5-turbo"):
+def get_unspsc_description(text, model="gpt-4o"):
     """Gets UNSPSC description for the text"""
     try:
         if not isinstance(text, str) or not text.strip():
@@ -389,20 +389,20 @@ def main():
         # Model selection
         st.session_state.config['translation_model'] = st.selectbox(
             "Select Translation Model",
-            ["gpt-3.5-turbo", "gpt-4"],
-            index=["gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['translation_model'])
+            ["gpt-4o", "gpt-3.5-turbo", "gpt-4"],
+            index=["gpt-4o", "gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['translation_model'])
         )
         
         st.session_state.config['classification_model'] = st.selectbox(
             "Select NAICS Classification Model",
-            ["gpt-3.5-turbo", "gpt-4"],
-            index=["gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['classification_model'])
+            ["gpt-4o", "gpt-3.5-turbo", "gpt-4"],
+            index=["gpt-4o", "gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['classification_model'])
         )
         
         st.session_state.config['unspsc_model'] = st.selectbox(
             "Select UNSPSC Classification Model",
-            ["gpt-3.5-turbo", "gpt-4"],
-            index=["gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['unspsc_model'])
+            ["gpt-4o", "gpt-3.5-turbo", "gpt-4"],
+            index=["gpt-4o", "gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['unspsc_model'])
         )
         
         # Set confidence thresholds
