@@ -464,6 +464,7 @@ def main():
                 # Add new columns for translations and classifications
                 df['procurement_description_en'] = ''
                 df['account_en'] = ''
+                df['input_text'] = ''  # Add new column for combined text
                 df['naics_code'] = ''
                 df['naics_description'] = ''
                 df['naics_confidence'] = 0
@@ -491,6 +492,9 @@ def main():
                         model=st.session_state.config['translation_model']
                     )
                     
+                    # Create combined input text
+                    df.at[i, 'input_text'] = f"{df.at[i, 'procurement_description_en']} — Account: {df.at[i, 'account_en']}"
+                    
                     progress_bar.progress(progress)
                 
                 # NAICS Classification phase
@@ -499,12 +503,9 @@ def main():
                     progress = 1/3 + (i + 1) / (total_rows * 3)  # Second third for NAICS
                     stopwatch.text(f"Time elapsed: {format_time(time.time() - start_time)}")
                     
-                    # Combine translated descriptions for better context
-                    combined_text = f"Procurement Description: {row['procurement_description_en']}\nAccount Classification: {row['account_en']}"
-                    
-                    # Get NAICS classification
+                    # Get NAICS classification using the combined input text
                     code, description, confidence = get_naics_code(
-                        combined_text,
+                        row['input_text'],
                         model=st.session_state.config['classification_model']
                     )
                     
@@ -522,9 +523,9 @@ def main():
                     progress = 2/3 + (i + 1) / (total_rows * 3)  # Final third for UNSPSC
                     stopwatch.text(f"Time elapsed: {format_time(time.time() - start_time)}")
                     
-                    # Get UNSPSC classification using both procurement description and NAICS description
+                    # Get UNSPSC classification using the combined input text
                     code, description, confidence = get_unspsc_code(
-                        row['procurement_description_en'],
+                        row['input_text'],
                         row['naics_description'],
                         model=st.session_state.config['unspsc_model']
                     )
