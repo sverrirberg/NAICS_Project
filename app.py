@@ -492,8 +492,13 @@ def main():
                         model=st.session_state.config['translation_model']
                     )
                     
-                    # Create combined input text
-                    df.at[i, 'input_text'] = f"{df.at[i, 'procurement_description_en']} — Account: {df.at[i, 'account_en']}"
+                    # Remove numbers from account text
+                    account_text = re.sub(r'\d+', '', df.at[i, 'account_en'])
+                    # Remove extra spaces that might be left after removing numbers
+                    account_text = ' '.join(account_text.split())
+                    
+                    # Create combined input text without the word 'Account'
+                    df.at[i, 'input_text'] = f"{df.at[i, 'procurement_description_en']} {account_text}"
                     
                     progress_bar.progress(progress)
                 
