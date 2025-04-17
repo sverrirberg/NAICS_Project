@@ -390,19 +390,19 @@ def main():
         st.session_state.config['translation_model'] = st.selectbox(
             "Select Translation Model",
             ["gpt-4o", "gpt-3.5-turbo", "gpt-4"],
-            index=["gpt-4o", "gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['translation_model'])
+            index=0  # Set gpt-4o as default
         )
         
         st.session_state.config['classification_model'] = st.selectbox(
             "Select NAICS Classification Model",
             ["gpt-4o", "gpt-3.5-turbo", "gpt-4"],
-            index=["gpt-4o", "gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['classification_model'])
+            index=0  # Set gpt-4o as default
         )
         
         st.session_state.config['unspsc_model'] = st.selectbox(
             "Select UNSPSC Classification Model",
             ["gpt-4o", "gpt-3.5-turbo", "gpt-4"],
-            index=["gpt-4o", "gpt-3.5-turbo", "gpt-4"].index(st.session_state.config['unspsc_model'])
+            index=0  # Set gpt-4o as default
         )
         
         # Set confidence thresholds
